@@ -1,0 +1,37 @@
+# Config file for 2018 beta
+# Domain: roborio-192-frc.local
+
+swerve_width=0.6604
+swerve_height=0.5334
+
+
+swerve_inverted=true
+
+fl_rotate=1
+fl_drive=2
+fl_offset=220
+fr_rotate=15
+fr_drive=16
+fr_offset=-129
+bl_rotate=6
+bl_drive=7
+bl_offset=93
+br_rotate=10
+br_drive=11
+br_offset=548
+
+
+ticks_per_rotation=1024
+drive_encoder_scale=0.0005988488780068048
+name=beta2018
+
+upper_flywheel=5
+lower_right_flywheel=14
+lower_left_flywheel=3
+winch_motor=12
+winch_motor_follower=13
+
+right_sol=2
+left_sol=3
+center_sol=0
+winch_sol=1
