@@ -16,9 +16,9 @@ public class Intake {
 		right = new TalonSRX(Config.getInt("lower_right_flywheel"));
 		right.setInverted(true);
 		upper = new TalonSRX(Config.getInt("upper_flywheel"));
-		mainSol = new Solenoid(Config.getInt("centersol"));
-		leftSol = new Solenoid(Config.getInt("leftsol"));
-		rightSol = new Solenoid(Config.getInt("rightsol"));
+		mainSol = new Solenoid(Config.getInt("center_sol"));
+		leftSol = new Solenoid(Config.getInt("left_sol"));
+		rightSol = new Solenoid(Config.getInt("right_sol"));
 	}
 
 	public void spitOut() {

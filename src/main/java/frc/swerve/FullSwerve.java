@@ -14,6 +14,7 @@ public class FullSwerve {
 
 	public FullSwerve(NavXGyro gyro) {
 		this.gyro = gyro;
+		gyro.reset();
 		wheels = new Wheel[4];
 		wheels[0] = new Wheel("fr");
 		wheels[1] = new Wheel("br");
@@ -51,9 +52,9 @@ public class FullSwerve {
 			double wheelPos = wheels[i].getCurrentPosition();
 			double speed = wheels[i].getDriveSpeed();
 			w += Math.sin(wheelPos - wheelAngle) * speed / RADIUS;
-			wheelAngle += gyroAngle;
-			vx += Math.cos(wheelAngle) * speed;
-			vy += Math.sin(wheelAngle) * speed;
+			wheelPos += gyroAngle;
+			vx += Math.cos(wheelPos) * speed;
+			vy += Math.sin(wheelPos) * speed;
 		}
 		w /= 4.0;
 		vx /= 4.0;

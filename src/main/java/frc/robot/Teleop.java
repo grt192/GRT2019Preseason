@@ -51,12 +51,12 @@ public class Teleop {
 
 	private void driveSwerve() {
 		double x = JoystickProfile.clipAndSquare(-swerveXbox.getY(Hand.kLeft));
-		double y = JoystickProfile.clipAndSquare(swerveXbox.getX(Hand.kRight));
+		double y = JoystickProfile.clipAndSquare(swerveXbox.getX(Hand.kLeft));
 		double lTrigger = swerveXbox.getTriggerAxis(Hand.kLeft);
-		double rTrigger = swerveXbox.getTriggerAxis(Hand.kLeft);
+		double rTrigger = swerveXbox.getTriggerAxis(Hand.kRight);
+		double rotate = 0;
 		if (lTrigger + rTrigger > 0.05) {
-			double rotate = rTrigger * rTrigger - lTrigger * lTrigger;
-			swerve.setVelocity(x, y, rotate);
+			rotate = rTrigger * rTrigger - lTrigger * lTrigger;
 		} else {
 			double rx = -swerveXbox.getY(Hand.kRight);
 			double ry = swerveXbox.getX(Hand.kRight);
@@ -64,8 +64,8 @@ public class Teleop {
 				double theta = Math.atan2(ry, rx);
 				swerve.setAngle(theta);
 			}
-			swerve.setVelocity(x, y);
 		}
+		swerve.setVelocity(x, y, rotate);
 	}
 
 }

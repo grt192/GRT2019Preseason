@@ -1,5 +1,6 @@
 package frc.controlloops;
 
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.fieldmapping.EncoderPositionTracker;
 import frc.fieldmapping.PositionTracker;
 import frc.swerve.FullSwerve;
@@ -22,23 +23,27 @@ public class SwerveControl extends Thread {
 
 	public SwerveControl(FullSwerve swerve) {
 		this.swerve = swerve;
-		thetaPID = new PositionPID(8.5, 0.0, 5.7);
+		thetaPID = new PositionPID(0, 0.0, 0);
 		thetaPID.setCyclical(0, Math.PI * 2);
 		thetaPID.setOutputBounds(-1.0, 1.0);
 		positionTracker = new EncoderPositionTracker(dT);
-		reset = true;
+		enabled = false;
 	}
 
 	@Override
 	public void run() {
 		boolean positionPIDenabled = false;
 		positionTracker.reset();
+		long nextLoop = System.currentTimeMillis();
 		while (true) {
-			long start = System.currentTimeMillis();
+			nextLoop += TIME_STEP;
 			if (reset)
 				doEnable();
 			SwerveData data = swerve.getSwerveData();
 			positionTracker.update(data);
+			SmartDashboard.putNumber("x", positionTracker.getX());
+			SmartDashboard.putNumber("y", positionTracker.getY());
+			SmartDashboard.putNumber("gyro", data.gyroAngle);
 			if (enabled) {
 				double w = userW;
 				if (!positionPIDenabled && w == 0) {
@@ -53,12 +58,16 @@ public class SwerveControl extends Thread {
 						w = thetaPID.calculate(data.gyroAngle, data.gyroW, dT);
 					}
 				}
+				System.out.println("vx: " + data.encoderVX + "; vy: " + data.encoderVY);
 				swerve.drive(userVX, userVY, w);
 			}
-			try {
-				Thread.sleep(start + TIME_STEP - System.currentTimeMillis());
-			} catch (InterruptedException e) {
-				e.printStackTrace();
+			long sleepTime = nextLoop - System.currentTimeMillis();
+			if (sleepTime > 0) {
+				try {
+					Thread.sleep(sleepTime);
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
 			}
 		}
 	}

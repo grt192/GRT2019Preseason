@@ -18,7 +18,7 @@ public class Elevator {
 		elevator.setNeutralMode(NeutralMode.Brake);
 		follower = new TalonSRX(Config.getInt("winch_motor_follower"));
 		follower.setNeutralMode(NeutralMode.Brake);
-		winchLock = new Solenoid(Config.getInt("winchsol"));
+		winchLock = new Solenoid(Config.getInt("winch_sol"));
 		follower.set(ControlMode.Follower, elevator.getDeviceID());
 	}
 
