@@ -14,7 +14,7 @@ class PositionPID {
 	private double prevError;
 	private double totalError;
 	private boolean started;
-	private double setpoint;
+	private volatile double setpoint;
 
 	public PositionPID(double p, double i, double d) {
 		kP = p;

@@ -11,7 +11,7 @@ class VelocityPIF {
 	private double prevError;
 	private double totalError;
 	private boolean started;
-	private double setpoint;
+	private volatile double setpoint;
 
 	public VelocityPIF(double p, double i, double f) {
 		kP = p;

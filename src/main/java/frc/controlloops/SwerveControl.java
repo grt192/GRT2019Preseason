@@ -13,6 +13,7 @@ public class SwerveControl extends Thread {
 
 	private FullSwerve swerve;
 	private PositionPID thetaPID;
+	private VelocityPIF xPIF, yPIF;
 
 	private PositionTracker positionTracker;
 
@@ -26,6 +27,8 @@ public class SwerveControl extends Thread {
 		thetaPID = new PositionPID(0.86, 0.0, 0.57);
 		thetaPID.setCyclical(0, Math.PI * 2);
 		thetaPID.setOutputBounds(-1.0, 1.0);
+		xPIF = new VelocityPIF(0.34, 0, 0.2);
+		yPIF = new VelocityPIF(0.34, 0, 0.2);
 		positionTracker = new EncoderPositionTracker(dT);
 		enabled = false;
 	}
@@ -45,6 +48,8 @@ public class SwerveControl extends Thread {
 			SmartDashboard.putNumber("y", positionTracker.getY());
 			SmartDashboard.putNumber("gyro", data.gyroAngle);
 			if (enabled) {
+				double vx = xPIF.calculate(data.encoderVX, dT);
+				double vy = xPIF.calculate(data.encoderVY, dT);
 				double w = userW;
 				if (!positionPIDenabled && w == 0) {
 					thetaPID.reset();
@@ -59,7 +64,7 @@ public class SwerveControl extends Thread {
 					}
 				}
 				System.out.println("vx: " + data.encoderVX + "; vy: " + data.encoderVY);
-				swerve.drive(userVX, userVY, w);
+				swerve.drive(vx, vy, w);
 			}
 			long sleepTime = nextLoop - System.currentTimeMillis();
 			if (sleepTime > 0) {
@@ -83,6 +88,8 @@ public class SwerveControl extends Thread {
 	private void doEnable() {
 		reset = false;
 		enabled = true;
+		xPIF.reset();
+		yPIF.reset();
 		setVelocity(0, 0, 0);
 	}
 
@@ -91,13 +98,13 @@ public class SwerveControl extends Thread {
 	}
 
 	public void setVelocity(double vx, double vy) {
-		userVX = vx;
-		userVY = vy;
+		xPIF.setSetpoint(vx);
+		xPIF.setSetpoint(vy);
 	}
 
 	public void setVelocity(double vx, double vy, double w) {
-		userVX = vx;
-		userVY = vy;
+		xPIF.setSetpoint(vx);
+		xPIF.setSetpoint(vy);
 		userW = w;
 	}
 
