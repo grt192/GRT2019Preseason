@@ -23,7 +23,7 @@ public class SwerveControl extends Thread {
 
 	public SwerveControl(FullSwerve swerve) {
 		this.swerve = swerve;
-		thetaPID = new PositionPID(0, 0.0, 0);
+		thetaPID = new PositionPID(0.86, 0.0, 0.57);
 		thetaPID.setCyclical(0, Math.PI * 2);
 		thetaPID.setOutputBounds(-1.0, 1.0);
 		positionTracker = new EncoderPositionTracker(dT);
