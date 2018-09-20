@@ -46,19 +46,36 @@ public class SwerveControl extends Thread {
 		positionTracker.reset();
 		long nextLoop = System.currentTimeMillis();
 		while (true) {
+			long t1 = System.nanoTime();
+			long t2 = 0;
 			nextLoop += TIME_STEP;
 			if (reset)
 				doEnable();
+			// print
+			t2 = System.nanoTime();
+			System.out.println("Reset took " + (t2 - t1) + "ns");
 			SwerveData data = swerve.getSwerveData();
+			// print
+			t1 = System.nanoTime();
+			System.out.println("Data took " + (t1 - t2) + "ns");
 			positionTracker.update(data);
+			// print
+			t2 = System.nanoTime();
+			System.out.println("Pos tracking took " + (t2 - t1) + "ns");
 			SmartDashboard.putNumber("x", positionTracker.getX());
 			SmartDashboard.putNumber("y", positionTracker.getY());
 			SmartDashboard.putNumber("gyro", data.gyroAngle);
+			// print
+			t1 = System.nanoTime();
+			System.out.println("SmartDashboard took " + (t1 - t2) + "ns");
 			if (enabled) {
 				double vx = xPIF.calculate(data.encoderVX, dT);
 				double vy = yPIF.calculate(data.encoderVY, dT);
 				vx = JoystickProfile.applyDeadband(vx);
 				vy = JoystickProfile.applyDeadband(vy);
+				// print
+				t2 = System.nanoTime();
+				System.out.println("Velocity took " + (t2 - t1) + "ns");
 				double w = userW;
 				if (!positionPIDenabled && w == 0) {
 					thetaPID.reset();
@@ -72,8 +89,14 @@ public class SwerveControl extends Thread {
 						w = thetaPID.calculate(data.gyroAngle, data.gyroW, dT);
 					}
 				}
+				// print
+				t1 = System.nanoTime();
+				System.out.println("Rotation took " + (t1 - t2) + "ns");
 				System.out.println("vx: " + vx + "; vy: " + vy + "; w: " + w);
 				swerve.drive(vx, vy, w);
+				// print
+				t2 = System.nanoTime();
+				System.out.println("Driving took " + (t2 - t1) + "ns");
 			}
 			long sleepTime = nextLoop - System.currentTimeMillis();
 			if (sleepTime > 0) {
