@@ -28,6 +28,11 @@ public class Teleop {
 	}
 
 	private void manualControls() {
+		// driveMechs();
+		driveSwerve();
+	}
+
+	private void driveMechs() {
 		if (mechXbox.getXButtonPressed()) {
 			mechs.intake.moveCenterPickup();
 		}
@@ -45,8 +50,6 @@ public class Teleop {
 		if (elevatorSpeed != 0.0) {
 			mechs.intake.movePickupOut();
 		}
-
-		driveSwerve();
 	}
 
 	private void driveSwerve() {

@@ -1,15 +1,19 @@
 package frc.controlloops;
 
+import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.fieldmapping.EncoderPositionTracker;
 import frc.fieldmapping.PositionTracker;
+import frc.robot.JoystickProfile;
 import frc.swerve.FullSwerve;
 import frc.swerve.SwerveData;
+import frc.util.GRTUtil;
 
 public class SwerveControl extends Thread {
 
 	private static final long TIME_STEP = 10;
 	private static final double dT = TIME_STEP / 1000.0;
+	private static final double MAX_SPEED = 2.95;
 
 	private FullSwerve swerve;
 	private PositionPID thetaPID;
@@ -20,15 +24,18 @@ public class SwerveControl extends Thread {
 	private volatile boolean reset;
 	private volatile boolean enabled;
 
-	private volatile double userVX, userVY, userW;
+	private volatile double userW;
 
 	public SwerveControl(FullSwerve swerve) {
+		setPriority(MAX_PRIORITY);
 		this.swerve = swerve;
-		thetaPID = new PositionPID(0.86, 0.0, 0.57);
+		thetaPID = new PositionPID(0.8, 0, 0);// new PositionPID(0.86, 0.0, 0.57);
 		thetaPID.setCyclical(0, Math.PI * 2);
 		thetaPID.setOutputBounds(-1.0, 1.0);
-		xPIF = new VelocityPIF(0.34, 0, 0.2);
-		yPIF = new VelocityPIF(0.34, 0, 0.2);
+		xPIF = new VelocityPIF(0.34, 0.0, 0.5);
+		xPIF.setMaxAccum(2.0);
+		yPIF = new VelocityPIF(0.34, 0.0, 0.5);
+		yPIF.setMaxAccum(2.0);
 		positionTracker = new EncoderPositionTracker(dT);
 		enabled = false;
 	}
@@ -49,7 +56,9 @@ public class SwerveControl extends Thread {
 			SmartDashboard.putNumber("gyro", data.gyroAngle);
 			if (enabled) {
 				double vx = xPIF.calculate(data.encoderVX, dT);
-				double vy = xPIF.calculate(data.encoderVY, dT);
+				double vy = yPIF.calculate(data.encoderVY, dT);
+				vx = JoystickProfile.applyDeadband(vx);
+				vy = JoystickProfile.applyDeadband(vy);
 				double w = userW;
 				if (!positionPIDenabled && w == 0) {
 					thetaPID.reset();
@@ -63,7 +72,7 @@ public class SwerveControl extends Thread {
 						w = thetaPID.calculate(data.gyroAngle, data.gyroW, dT);
 					}
 				}
-				System.out.println("vx: " + data.encoderVX + "; vy: " + data.encoderVY);
+				System.out.println("vx: " + vx + "; vy: " + vy + "; w: " + w);
 				swerve.drive(vx, vy, w);
 			}
 			long sleepTime = nextLoop - System.currentTimeMillis();
@@ -73,6 +82,8 @@ public class SwerveControl extends Thread {
 				} catch (InterruptedException e) {
 					e.printStackTrace();
 				}
+			} else {
+				System.out.println("Swerve loop too slow!!!");
 			}
 		}
 	}
@@ -98,13 +109,12 @@ public class SwerveControl extends Thread {
 	}
 
 	public void setVelocity(double vx, double vy) {
-		xPIF.setSetpoint(vx);
-		xPIF.setSetpoint(vy);
+		xPIF.setSetpoint(vx * MAX_SPEED);
+		yPIF.setSetpoint(vy * MAX_SPEED);
 	}
 
 	public void setVelocity(double vx, double vy, double w) {
-		xPIF.setSetpoint(vx);
-		xPIF.setSetpoint(vy);
+		setVelocity(vx, vy);
 		userW = w;
 	}
 
