@@ -1,13 +1,10 @@
 package frc.controlloops;
 
-import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.fieldmapping.EncoderPositionTracker;
-import frc.fieldmapping.PositionTracker;
 import frc.robot.JoystickProfile;
 import frc.swerve.FullSwerve;
 import frc.swerve.SwerveData;
-import frc.util.GRTUtil;
 
 public class SwerveControl extends Thread {
 
@@ -19,7 +16,7 @@ public class SwerveControl extends Thread {
 	private PositionPID thetaPID;
 	private VelocityPIF xPIF, yPIF;
 
-	private PositionTracker positionTracker;
+	private EncoderPositionTracker positionTracker;
 
 	private volatile boolean reset;
 	private volatile boolean enabled;
@@ -47,35 +44,21 @@ public class SwerveControl extends Thread {
 		long nextLoop = System.currentTimeMillis();
 		while (true) {
 			long t1 = System.nanoTime();
+			long start = t1;
 			long t2 = 0;
 			nextLoop += TIME_STEP;
 			if (reset)
 				doEnable();
-			// print
-			t2 = System.nanoTime();
-			System.out.println("Reset took " + (t2 - t1) + "ns");
 			SwerveData data = swerve.getSwerveData();
-			// print
-			t1 = System.nanoTime();
-			System.out.println("Data took " + (t1 - t2) + "ns");
 			positionTracker.update(data);
-			// print
-			t2 = System.nanoTime();
-			System.out.println("Pos tracking took " + (t2 - t1) + "ns");
 			SmartDashboard.putNumber("x", positionTracker.getX());
 			SmartDashboard.putNumber("y", positionTracker.getY());
 			SmartDashboard.putNumber("gyro", data.gyroAngle);
-			// print
-			t1 = System.nanoTime();
-			System.out.println("SmartDashboard took " + (t1 - t2) + "ns");
 			if (enabled) {
 				double vx = xPIF.calculate(data.encoderVX, dT);
 				double vy = yPIF.calculate(data.encoderVY, dT);
 				vx = JoystickProfile.applyDeadband(vx);
 				vy = JoystickProfile.applyDeadband(vy);
-				// print
-				t2 = System.nanoTime();
-				System.out.println("Velocity took " + (t2 - t1) + "ns");
 				double w = userW;
 				if (!positionPIDenabled && w == 0) {
 					thetaPID.reset();
@@ -89,16 +72,11 @@ public class SwerveControl extends Thread {
 						w = thetaPID.calculate(data.gyroAngle, data.gyroW, dT);
 					}
 				}
-				// print
-				t1 = System.nanoTime();
-				System.out.println("Rotation took " + (t1 - t2) + "ns");
 				System.out.println("vx: " + vx + "; vy: " + vy + "; w: " + w);
 				swerve.drive(vx, vy, w);
-				// print
-				t2 = System.nanoTime();
-				System.out.println("Driving took " + (t2 - t1) + "ns");
 			}
 			long sleepTime = nextLoop - System.currentTimeMillis();
+			System.out.println("Total time: " + (System.nanoTime() - start) + "ns");
 			if (sleepTime > 0) {
 				try {
 					Thread.sleep(sleepTime);
@@ -108,6 +86,7 @@ public class SwerveControl extends Thread {
 			} else {
 				System.out.println("Swerve loop too slow!!!");
 			}
+			System.out.println("With sleep: " + (System.nanoTime() - start) + "ns");
 		}
 	}
 

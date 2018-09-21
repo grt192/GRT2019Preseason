@@ -49,8 +49,10 @@ public class FullSwerve {
 		double w = 0;
 		for (int i = 0; i < 4; i++) {
 			double wheelAngle = getRelativeWheelAngle(i);
+			long start = System.nanoTime();
 			double wheelPos = wheels[i].getCurrentPosition();
 			double speed = wheels[i].getDriveSpeed();
+			System.out.println("Talon data took " + (System.nanoTime() - start) + "ns");
 			w += Math.sin(wheelPos - wheelAngle) * speed / RADIUS;
 			wheelPos += gyroAngle;
 			vx += Math.cos(wheelPos) * speed;
