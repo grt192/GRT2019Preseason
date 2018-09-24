@@ -43,9 +43,7 @@ public class SwerveControl extends Thread {
 		positionTracker.reset();
 		long nextLoop = System.currentTimeMillis();
 		while (true) {
-			long t1 = System.nanoTime();
-			long start = t1;
-			long t2 = 0;
+			long start = System.nanoTime();
 			nextLoop += TIME_STEP;
 			if (reset)
 				doEnable();
