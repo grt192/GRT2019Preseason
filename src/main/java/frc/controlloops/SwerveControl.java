@@ -11,6 +11,7 @@ public class SwerveControl extends Thread {
 	private static final long TIME_STEP = 10;
 	private static final double dT = TIME_STEP / 1000.0;
 	private static final double MAX_SPEED = 2.95;
+	private static final double MAX_ANGULAR_SPEED = 6.95;
 
 	private FullSwerve swerve;
 	private PositionPID thetaPID;
@@ -107,7 +108,7 @@ public class SwerveControl extends Thread {
 
 	public void setVelocity(double vx, double vy, double w) {
 		setVelocity(vx, vy);
-		userW = w;
+		userW = w * MAX_ANGULAR_SPEED;
 	}
 
 	public void setAngle(double angle) {
