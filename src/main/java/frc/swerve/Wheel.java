@@ -82,7 +82,7 @@ class Wheel {
 			rotateMotor.set(ControlMode.Position, encoderPos);
 		}
 		speed *= (reversed ? -1 : 1);
-		driveMotor.set(ControlMode.PercentOutput, speed);
+		driveMotor.set(ControlMode.Velocity, speed);
 	}
 
 	public double getDriveSpeed() {
@@ -109,12 +109,9 @@ class Wheel {
 		rotateMotor.config_kP(0, kP / TICKS_PER_ROTATION, 0);
 		rotateMotor.config_kI(0, kI / TICKS_PER_ROTATION, 0);
 		rotateMotor.config_kD(0, kD / TICKS_PER_ROTATION, 0);
+		rotateMotor.config_kF(0, 0, 0);
 		rotateMotor.configMaxIntegralAccumulator(0, maxIAccum, 0);
 		rotateMotor.configAllowableClosedloopError(0, 0, 0);
-
-		rotateMotor.config_kP(1, 0.0, 0);
-		rotateMotor.config_kI(1, 0.0, 0);
-		rotateMotor.config_kD(1, 0.0, 0);
 	}
 
 	private void configDriveMotor() {
@@ -128,6 +125,11 @@ class Wheel {
 		driveMotor.configSelectedFeedbackSensor(FeedbackDevice.QuadEncoder, 0, 0);
 		driveMotor.setStatusFramePeriod(StatusFrameEnhanced.Status_2_Feedback0, 10, 0);
 		driveMotor.getSensorCollection().setQuadraturePosition(0, 0);
+
+		driveMotor.config_kP(0, Config.getDouble("velocity_p") / DRIVE_TICKS_TO_METERS, 0);
+		driveMotor.config_kI(0, 0, 0);
+		driveMotor.config_kD(0, 0, 0);
+		driveMotor.config_kF(0, Config.getDouble("velocity_f") / DRIVE_TICKS_TO_METERS, 0);
 	}
 
 }

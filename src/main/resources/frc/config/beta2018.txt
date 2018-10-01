@@ -23,6 +23,9 @@ br_offset=548
 
 ticks_per_rotation=1024
 drive_encoder_scale=0.0005988488780068048
+velocity_f=0.34
+velocity_p=0.5
+
 name=beta2018
 
 upper_flywheel=5

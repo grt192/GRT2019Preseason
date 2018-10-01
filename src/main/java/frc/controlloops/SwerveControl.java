@@ -14,13 +14,13 @@ public class SwerveControl extends Thread {
 
 	private FullSwerve swerve;
 	private PositionPID thetaPID;
-	private VelocityPIF xPIF, yPIF;
 
 	private EncoderPositionTracker positionTracker;
 
 	private volatile boolean reset;
 	private volatile boolean enabled;
 
+	private volatile double userVX, userVY;
 	private volatile double userW;
 
 	public SwerveControl(FullSwerve swerve) {
@@ -29,10 +29,6 @@ public class SwerveControl extends Thread {
 		thetaPID = new PositionPID(0.8, 0, 0);// new PositionPID(0.86, 0.0, 0.57);
 		thetaPID.setCyclical(0, Math.PI * 2);
 		thetaPID.setOutputBounds(-1.0, 1.0);
-		xPIF = new VelocityPIF(0.34, 0.0, 0.5);
-		xPIF.setMaxAccum(2.0);
-		yPIF = new VelocityPIF(0.34, 0.0, 0.5);
-		yPIF.setMaxAccum(2.0);
 		positionTracker = new EncoderPositionTracker(dT);
 		enabled = false;
 	}
@@ -53,10 +49,8 @@ public class SwerveControl extends Thread {
 			SmartDashboard.putNumber("y", positionTracker.getY());
 			SmartDashboard.putNumber("gyro", data.gyroAngle);
 			if (enabled) {
-				double vx = xPIF.calculate(data.encoderVX, dT);
-				double vy = yPIF.calculate(data.encoderVY, dT);
-				vx = JoystickProfile.applyDeadband(vx);
-				vy = JoystickProfile.applyDeadband(vy);
+				double vx = userVX;
+				double vy = userVY;
 				double w = userW;
 				if (!positionPIDenabled && w == 0) {
 					thetaPID.reset();
@@ -99,8 +93,6 @@ public class SwerveControl extends Thread {
 	private void doEnable() {
 		reset = false;
 		enabled = true;
-		xPIF.reset();
-		yPIF.reset();
 		setVelocity(0, 0, 0);
 	}
 
@@ -109,8 +101,8 @@ public class SwerveControl extends Thread {
 	}
 
 	public void setVelocity(double vx, double vy) {
-		xPIF.setSetpoint(vx * MAX_SPEED);
-		yPIF.setSetpoint(vy * MAX_SPEED);
+		userVX = vx * MAX_SPEED;
+		userVY = vy * MAX_SPEED;
 	}
 
 	public void setVelocity(double vx, double vy, double w) {
