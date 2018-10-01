@@ -1,11 +1,14 @@
 package frc.swerve;
 
+import java.util.BitSet;
+
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.StatusFrameEnhanced;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 
 import frc.config.Config;
+import frc.controlloops.TalonDataLoop;
 import frc.util.GRTUtil;
 
 class Wheel {
@@ -23,6 +26,9 @@ class Wheel {
 
 	private TalonSRX rotateMotor;
 	private TalonSRX driveMotor;
+
+	private TalonDataLoop rotateDataLoop;
+	private TalonDataLoop driveDataLoop;
 
 	private String name;
 
@@ -86,12 +92,13 @@ class Wheel {
 	}
 
 	public double getDriveSpeed() {
-		return driveMotor.getSelectedSensorVelocity(0) * DRIVE_TICKS_TO_METERS * 10 * (reversed ? -1 : 1);
+		return driveDataLoop.getVelocity() * DRIVE_TICKS_TO_METERS * 10 * (reversed ? -1 : 1);
 	}
 
 	public double getCurrentPosition() {
-		return GRTUtil.positiveMod((((rotateMotor.getSelectedSensorPosition(0) - OFFSET) * TWO_PI / TICKS_PER_ROTATION)
-				+ (reversed ? Math.PI : 0)), TWO_PI);
+		return GRTUtil.positiveMod(
+				(((rotateDataLoop.getPosition() - OFFSET) * TWO_PI / TICKS_PER_ROTATION) + (reversed ? Math.PI : 0)),
+				TWO_PI);
 	}
 
 	public String getName() {
@@ -112,6 +119,11 @@ class Wheel {
 		rotateMotor.config_kF(0, 0, 0);
 		rotateMotor.configMaxIntegralAccumulator(0, maxIAccum, 0);
 		rotateMotor.configAllowableClosedloopError(0, 0, 0);
+
+		BitSet flags = new BitSet();
+		flags.set(TalonDataLoop.POSITION_INDEX);
+		rotateDataLoop = new TalonDataLoop(rotateMotor, 10, flags);
+		rotateDataLoop.start();
 	}
 
 	private void configDriveMotor() {
@@ -130,6 +142,11 @@ class Wheel {
 		driveMotor.config_kI(0, 0, 0);
 		driveMotor.config_kD(0, 0, 0);
 		driveMotor.config_kF(0, Config.getDouble("velocity_f") / DRIVE_TICKS_TO_METERS, 0);
+
+		BitSet flags = new BitSet();
+		flags.set(TalonDataLoop.VELOCITY_INDEX);
+		driveDataLoop = new TalonDataLoop(driveMotor, 10, flags);
+		driveDataLoop.start();
 	}
 
 }
