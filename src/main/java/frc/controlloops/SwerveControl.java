@@ -2,7 +2,6 @@ package frc.controlloops;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.fieldmapping.EncoderPositionTracker;
-import frc.robot.JoystickProfile;
 import frc.swerve.FullSwerve;
 import frc.swerve.SwerveData;
 
@@ -40,7 +39,6 @@ public class SwerveControl extends Thread {
 		positionTracker.reset();
 		long nextLoop = System.currentTimeMillis();
 		while (true) {
-			long start = System.nanoTime();
 			nextLoop += TIME_STEP;
 			if (reset)
 				doEnable();
@@ -66,10 +64,10 @@ public class SwerveControl extends Thread {
 					}
 				}
 				System.out.println("vx: " + vx + "; vy: " + vy + "; w: " + w);
+				System.out.println("ax: " + data.encoderVX + "; ay: " + data.encoderVY);
 				swerve.drive(vx, vy, w);
 			}
 			long sleepTime = nextLoop - System.currentTimeMillis();
-			System.out.println("Total time: " + (System.nanoTime() - start) + "ns");
 			if (sleepTime > 0) {
 				try {
 					Thread.sleep(sleepTime);
@@ -79,7 +77,6 @@ public class SwerveControl extends Thread {
 			} else {
 				System.out.println("Swerve loop too slow!!!");
 			}
-			System.out.println("With sleep: " + (System.nanoTime() - start) + "ns");
 		}
 	}
 

@@ -30,10 +30,13 @@ public class TalonDataLoop extends Thread {
             if (flags.get(VELOCITY_INDEX))
                 velocity = talon.getSelectedSensorVelocity(0);
             long end = System.currentTimeMillis();
-            try {
-                Thread.sleep(start - end + TIME_STEP);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
+            long sleepTime = start - end + TIME_STEP;
+            if (sleepTime > 0) {
+                try {
+                    Thread.sleep(sleepTime);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
             }
         }
     }
