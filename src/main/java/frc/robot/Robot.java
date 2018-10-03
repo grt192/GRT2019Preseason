@@ -65,6 +65,5 @@ public class Robot extends IterativeRobot {
 
 	@Override
 	public void testPeriodic() {
-		swerve.setVelocity(1, 0, 0);
 	}
 }
