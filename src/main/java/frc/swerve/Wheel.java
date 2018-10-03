@@ -138,10 +138,10 @@ class Wheel {
 		driveMotor.setStatusFramePeriod(StatusFrameEnhanced.Status_2_Feedback0, 10, 0);
 		driveMotor.getSensorCollection().setQuadraturePosition(0, 0);
 
-		driveMotor.config_kP(0, Config.getDouble("velocity_p") * DRIVE_TICKS_TO_METERS * 1023, 0);
+		driveMotor.config_kP(0, Config.getDouble("velocity_p") * DRIVE_TICKS_TO_METERS * 10 * 1023, 0);
 		driveMotor.config_kI(0, 0, 0);
 		driveMotor.config_kD(0, 0, 0);
-		driveMotor.config_kF(0, Config.getDouble("velocity_f") * DRIVE_TICKS_TO_METERS * 1023, 0);
+		driveMotor.config_kF(0, Config.getDouble("velocity_f") * DRIVE_TICKS_TO_METERS * 10 * 1023, 0);
 
 		BitSet flags = new BitSet();
 		flags.set(TalonDataLoop.VELOCITY_INDEX);
