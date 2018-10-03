@@ -87,7 +87,7 @@ class Wheel {
 			double encoderPos = targetPosition * TICKS_PER_ROTATION + OFFSET;
 			rotateMotor.set(ControlMode.Position, encoderPos);
 		}
-		speed *= (reversed ? -1 : 1) / DRIVE_TICKS_TO_METERS;
+		speed *= (reversed ? -1 : 1) / (DRIVE_TICKS_TO_METERS * 10);
 		driveMotor.set(ControlMode.Velocity, speed);
 	}
 
