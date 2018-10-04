@@ -29,8 +29,6 @@ Contains the `FullSwerve` class, which should now only be controlled through `Sw
 Contains `GRTUtil`, named such because there are so many other classes just called `Util`. `GRTUtil` contains utility functions which are not necessarilly used for joystick inputs.
 
 ## Other Files
-### .settings
-I actually don't know. Probably has to do with Java formatter.
 
 ### .vscode
 Contains workspace settings and lauch configurations. The latter is useless as far as I know, the former will help make sure we all use the same settings.
