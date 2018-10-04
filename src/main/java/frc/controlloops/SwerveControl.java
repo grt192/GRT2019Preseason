@@ -75,7 +75,7 @@ public class SwerveControl extends Thread {
 					e.printStackTrace();
 				}
 			} else {
-				System.out.println("Swerve loop too slow!!!");
+				// System.out.println("Swerve loop too slow!!!");
 			}
 		}
 	}

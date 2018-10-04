@@ -1,5 +1,6 @@
 package frc.swerve;
 
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.config.Config;
 
 public class FullSwerve {
@@ -35,6 +36,12 @@ public class FullSwerve {
 			double dy = RADIUS * Math.sin(wheelAngle);
 			double wheelVX = vx - dy * w;
 			double wheelVY = vy + dx * w;
+			if (i == 1) {
+				SmartDashboard.putNumber("Gyro", gyroAngle);
+				SmartDashboard.putNumber("Module0 vx", wheelVX);
+				SmartDashboard.putNumber("Module0 vy", wheelVY);
+				SmartDashboard.putNumber("Module0 pos", Math.atan2(wheelVY, wheelVX));
+			}
 			double wheelPos = Math.atan2(wheelVY, wheelVX) - gyroAngle;
 			double power = Math.sqrt(wheelVX * wheelVX + wheelVY * wheelVY);
 			wheels[i].set(wheelPos, power);

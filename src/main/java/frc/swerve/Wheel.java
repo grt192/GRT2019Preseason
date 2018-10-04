@@ -67,7 +67,7 @@ class Wheel {
 			double targetPosition = radians / TWO_PI;
 			targetPosition = GRTUtil.positiveMod(targetPosition, 1.0);
 
-			int encoderPosition = rotateDataLoop.getPosition();// rotateMotor.getSelectedSensorPosition(0) - OFFSET;
+			int encoderPosition = rotateMotor.getSelectedSensorPosition(0) - OFFSET;
 			double currentPosition = encoderPosition / TICKS_PER_ROTATION;
 			double rotations = Math.floor(currentPosition);
 			currentPosition -= rotations;

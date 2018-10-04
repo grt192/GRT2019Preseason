@@ -29,8 +29,6 @@ public class TalonDataLoop extends Thread {
                 position = talon.getSelectedSensorPosition(0);
             if (flags.get(VELOCITY_INDEX)) {
                 velocity = talon.getSelectedSensorVelocity(0);
-                System.out
-                        .println("Error: " + talon.getClosedLoopError(0) + " Target: " + talon.getClosedLoopTarget(0));
             }
             long end = System.currentTimeMillis();
             long sleepTime = start - end + TIME_STEP;
