@@ -8,6 +8,7 @@
 package frc.robot;
 
 import edu.wpi.first.wpilibj.IterativeRobot;
+import edu.wpi.first.wpilibj.SerialPort.Port;
 import frc.config.Config;
 import frc.controlloops.SwerveControl;
 import frc.mechs.MechCollection;
@@ -17,6 +18,7 @@ import frc.swerve.NavXGyro;
 public class Robot extends IterativeRobot {
 
 	private SwerveControl swerve;
+	private JeVois jevois;
 	private MechCollection mechs;
 	private Autonomous auton;
 	private Teleop teleop;
@@ -24,11 +26,13 @@ public class Robot extends IterativeRobot {
 	@Override
 	public void robotInit() {
 		Config.start();
-		swerve = new SwerveControl(new FullSwerve(new NavXGyro()));
-		swerve.start();
-		mechs = new MechCollection();
-		auton = new Autonomous(swerve, mechs);
-		teleop = new Teleop(swerve, mechs);
+		// swerve = new SwerveControl(new FullSwerve(new NavXGyro()));
+		// swerve.start();
+		jevois = new JeVois(Port.kUSB1);
+		jevois.start();
+		// mechs = new MechCollection();
+		// auton = new Autonomous(swerve, mechs);
+		// teleop = new Teleop(swerve, mechs);
 	}
 
 	@Override
@@ -55,15 +59,16 @@ public class Robot extends IterativeRobot {
 
 	@Override
 	public void disabledInit() {
-		swerve.disable();
+		// swerve.disable();
 	}
 
 	@Override
 	public void testInit() {
-		swerve.enable();
+		// swerve.enable();
 	}
 
 	@Override
 	public void testPeriodic() {
+		System.out.println(jevois.getLastString());
 	}
 }
