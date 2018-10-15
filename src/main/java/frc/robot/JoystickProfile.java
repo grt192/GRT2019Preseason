@@ -23,12 +23,9 @@ public class JoystickProfile {
 		return square(applyDeadband(x));
 	}
 
-	public static double magnitudeSquared(double x, double y) {
-		double clipX = applyDeadband(x);
-		double clipY = applyDeadband(y);
-		double magnitude = Math.sqrt(clipX * clipX + clipY * clipY);
-		// return clipX * magnitude, clipY * magnitude;
-		return 0.0;
+	public static double clipMagnitude(double x, double y) {
+		double magnitude = Math.sqrt(x * x + y * y);
+		return applyDeadband(magnitude);
 	}
 
 }
