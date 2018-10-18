@@ -1,6 +1,5 @@
 package frc.controlloops;
 
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.fieldmapping.EncoderPositionTracker;
 import frc.swerve.FullSwerve;
 import frc.swerve.SwerveData;
@@ -60,12 +59,12 @@ public class SwerveControl extends Thread {
 					if (w != 0) {
 						positionPIDenabled = false;
 					} else {
-						w = thetaPID.calculate(data.gyroAngle, data.gyroW, dT);
+						w = 0; // thetaPID.calculate(data.gyroAngle, data.gyroW, dT);
 					}
 				}
 				System.out.println("vx: " + vx + "; vy: " + vy + "; w: " + w);
 				System.out.println("ax: " + data.encoderVX + "; ay: " + data.encoderVY);
-				swerve.drive(vx, vy, 0);
+				swerve.drive(vx, vy, w);
 			}
 			long sleepTime = nextLoop - System.currentTimeMillis();
 			if (sleepTime > 0) {
