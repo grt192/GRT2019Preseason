@@ -29,10 +29,10 @@ velocity_p=0.5
 name=beta2018
 
 upper_flywheel=5
-lower_right_flywheel=14
-lower_left_flywheel=3
-winch_motor=12
-winch_motor_follower=13
+lower_right_flywheel=5
+lower_left_flywheel=5
+winch_motor=5
+winch_motor_follower=5
 
 right_sol=2
 left_sol=3
