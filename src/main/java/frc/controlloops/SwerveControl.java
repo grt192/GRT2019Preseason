@@ -1,6 +1,5 @@
 package frc.controlloops;
 
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.fieldmapping.EncoderPositionTracker;
 import frc.swerve.FullSwerve;
 import frc.swerve.SwerveData;
