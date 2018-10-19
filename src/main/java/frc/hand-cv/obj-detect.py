@@ -29,15 +29,20 @@ while(cap.isOpened()):
     center_y = int(M['m01']/M['m00'])
     diff_x = old_x - center_x
     diff_y = old_y - center_y
-    # opposite because of camera
-    horiz = "right" if (diff_x > 0) else "left"
-    vert = "up" if (diff_y > 0) else "down"
-    mag = round(((diff_x ** 2) + (diff_y ** 2) ** (0.5)), 2)
     if mag < 0.2:
         mag = 0
         horiz = "none"
         vert = "none"
-    print(mag, horiz, vert)
+    else:
+        # opposite because of camera
+        horiz = "right" if (diff_x > 0) else "left"
+        vert = "up" if (diff_y > 0) else "down"
+        mag = round(((diff_x ** 2) + (diff_y ** 2) ** (0.5)), 2)
+    if diff_x == 0 or diff_y == 0:
+        angle = 0
+    else:
+        angle = np.arctan(diff_y / diff_x)
+    angle = np.arctan(diff_y / diff_x)
     cv2.circle(crop_img, (center_x, center_y), 5, (255, 255, 255), -1)
 
     hull = cv2.convexHull(cnt)
