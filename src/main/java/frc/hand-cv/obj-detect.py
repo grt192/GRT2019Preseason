@@ -35,6 +35,8 @@ while(cap.isOpened()):
     mag = round(((diff_x ** 2) + (diff_y ** 2) ** (0.5)), 2)
     if mag < 0.2:
         mag = 0
+        horiz = "none"
+        vert = "none"
     print(mag, horiz, vert)
     cv2.circle(crop_img, (center_x, center_y), 5, (255, 255, 255), -1)
 
