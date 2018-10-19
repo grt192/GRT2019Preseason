@@ -62,6 +62,4 @@ while(cap.isOpened()):
     old_x = center_x
     old_y = center_y
 
-    k = cv2.waitKey(10)
-    if k == 27:
-        break
+    cv2.waitKey(5)
