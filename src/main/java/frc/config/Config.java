@@ -58,7 +58,7 @@ public class Config {
 					line = line.substring(1);
 
 				if (line.length() > 0 && line.charAt(0) != '#') {
-					String[] splitted = line.split("=");
+					String[] splitted = line.trim().split("=");
 					if (splitted.length == 2)
 						map.put(splitted[0], splitted[1]);
 				}
