@@ -62,8 +62,6 @@ public class SwerveControl extends Thread {
 						w = thetaPID.calculate(data.gyroAngle, data.gyroW, dT);
 					}
 				}
-				System.out.println("vx: " + vx + "; vy: " + vy + "; w: " + w);
-				System.out.println("ax: " + data.encoderVX + "; ay: " + data.encoderVY);
 				swerve.drive(vx, vy, 0);
 			}
 			long sleepTime = nextLoop - System.currentTimeMillis();

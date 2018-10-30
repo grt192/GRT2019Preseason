@@ -78,6 +78,9 @@ class Wheel {
 			}
 			targetPosition += rotations;
 			reversed = newReverse;
+			System.out.print(name + ": " + delta);
+			System.out.println(name + ": " + reversed);
+			System.out.println(OFFSET);
 			double encoderPos = targetPosition * TICKS_PER_ROTATION + OFFSET;
 			rotateMotor.set(ControlMode.Position, encoderPos);
 		}
