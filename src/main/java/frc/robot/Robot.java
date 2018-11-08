@@ -55,6 +55,7 @@ public class Robot extends IterativeRobot {
 
 	@Override
 	public void disabledInit() {
+		auton.disable();
 		swerve.disable();
 	}
 

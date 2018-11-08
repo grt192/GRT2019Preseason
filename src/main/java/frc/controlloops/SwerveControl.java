@@ -112,4 +112,8 @@ public class SwerveControl extends Thread {
 		thetaPID.setSetpoint(angle);
 	}
 
+	public EncoderPositionTracker getTracker() {
+		return positionTracker;
+	}
+
 }
